@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "aristatrackertesting",
+  "private_key_id": "1b7093779c0dfb390f6ea7e9c63326dbbdac3707",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCmgCFeLsSQoXh5\n1HeIhBY2pWlMEZs2e5x4mQT0YkYg1raxtuQYGaC3c+glhxDzcrNYUIC4GL3ljI71\nSCqtHmXqVGaLGC6vIb+Ujm9/lYiBXAlsf8zL0Q9vFxBb8uBelZrqprt+7jazXNSI\nOzP7muk0iWU7cBW/TEV1kcRjwEiSdZlCUjIZrAAoka6yysSg0vHhpr+w4d++hOOU\nbr27eIHNl3HIEYnA0EgsPTvHxwBGwuujXrSaHct6AVYJuU3VnHbRYxhVWi/A4oKd\nNppF8NcJtuid7sBJNVeCivWUw/e5Swvq5lzx+kR9WUatt2BRCKyxAVZDqfxtX8Os\nlVEo8NKLAgMBAAECggEAThUv0Nnw7/zxoXzdE+YR/s2i7HwjRLFCp6HnW26NAdB/\n/CbPoGfAYdhXCeZmMi1b4zJZszxTLgg1cN1HuklTtUmgj2GnXxVeIZ6MtpIbYsMV\nXk8u7XSdHtV7pAtqYqEZdir8KiIv//ysZTkSf0/eRveaRH4jjMOJnYHfToJ55kjD\ng4WXxvkYNDEziVvGEkUYhE0uRn3rwhITq+1N88PUDVk1jrKYuw0Gyp3Bz6rYGy/A\n9Zye6DEFmlC/4wh/u6dh4F1gQWcmjTWlZaNI7DBlvlC49y/2FPOZUVZ2OAF7ewbr\nkO7bXTvk17KGhlYXTyVzxN/KZtpu5Avw4qwxvpe+ZQKBgQDTnqQmd42RoiJBZt86\nCHae7QNbjdQtZqohnXIxiPNO3UCTpBVXrqpFYWuj/LX7zUdjTgl8KOhH38hndmpH\nP2Mkxzu0OXWMzaLNxeWb/joChsbbqucqOERmSAwgs1Sc09V23aVLjXlgkSrEClhW\n3h/HeFdLea65ur8wDf1Rfo5Y/QKBgQDJayW3M6WnaIzXHwFfksyjtLM6l7SEDXdM\nZkA4i2nb90V4+gIBhZEdp0S351kAhrGznB+yEdiny4eOPlh4E+rz+lNuh+fJERMl\nuzQAlmyi9DSR7/PY8ZRYpIjji3cuPxnlQ9/3KIvZ5sw+CdJpEHMrGA7r4JwUFAlu\nj6EaebuUJwKBgC2jixdYtUlxRB4Cx6XGaX7A8vZt0hKwj4SMZjJUrNSXVvQAcTHl\n04b/Ca3mNIFHtluuWtFSKTZHBvt5SFZxTzqBVVj7A2UIfFIQmgJYg75DvuNlKlGq\nrOW6KBNtWZQxA1qNVrbCnii7ZhO9f2vMn+HvDDSU25/mrJD6k2Vd++kpAoGATmhP\nfkm0qr6gVP3U4weacf/d5Wk49E7pqewEA/8BboeLm9R3A3CjVQ/QSGbe1r2YX3rf\nO8qGtIsecdkDR3s5c1B3Ogfdyv/CnGWLkM7961F1RXpLSqCARyGFyE56Tp5xzjXl\n8ajvCBw4Vc4tAolMy/HJnTkKiSZjpY50AIJy6vECgYBdEXQHkcJCRygZzu5a/emW\n8VQb6kOp4BFUaVKhOWp91mNR2wTYsAmfftMuWWvMCD8NYKXV7otG8MB4fOQziIKt\nlVp2iJZW6BVsVnliZuNUSYZ4aN1u7tfp6onJyfm+ylsH80/3LMfWw3DUX6OOwv3T\nkcUdE/1FMEx3+RZUm5eXEw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@aristatrackertesting.iam.gserviceaccount.com",
+  "client_id": "112555129683212235502",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40aristatrackertesting.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
