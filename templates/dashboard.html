@@ -7,6 +7,10 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+
+</head>
     <style>
         * {
             box-sizing: border-box;
@@ -82,6 +86,35 @@
             flex: 1;
             margin-left: 250px;
             padding: 20px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-header h1 {
+            color: #1e293b;
+            font-size: 24px;
+        }
+
+        .dashboard-header .refresh-btn {
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .dashboard-header .refresh-btn:hover {
+            background-color: #1e293b;
         }
 
         .top-stats {
@@ -161,10 +194,25 @@
             color: #22c55e;
         }
 
+        .stat-card.warning .icon {
+            background-color: rgba(245, 158, 11, 0.1);
+        }
+
+        .stat-card.warning .icon i,
+        .stat-card.warning .number {
+            color: #f59e0b;
+        }
+
+        .stat-card.warning .percent {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
         .charts-row {
             display: flex;
             gap: 20px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .chart-container {
@@ -192,6 +240,7 @@
 
         .big-chart {
             flex: 2;
+            min-width: 500px;
         }
 
         .small-chart {
@@ -271,6 +320,188 @@
         .report-chart {
             height: 300px;
         }
+
+        .platform-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .platform-card {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .platform-card h3 {
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .platform-card-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .platform-card-icon.ios {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .platform-card-icon.android {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .platform-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .platform-stat-item {
+            background-color: #f8fafc;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .platform-stat-item .label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .platform-stat-item .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-primary {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .badge-success {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .no-data-message {
+            text-align: center;
+            padding: 40px 0;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .empty-row {
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border-radius: 8px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(30, 58, 138, 0.1);
+            border-radius: 50%;
+            border-top-color: #1e3a8a;
+            animation: spin 1s linear infinite;
+        }
+
+        .time-period-selector {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-btn {
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-btn.active {
+            background-color: #1e3a8a;
+            color: white;
+        }
+
+        .time-btn:hover:not(.active) {
+            background-color: #f1f5f9;
+        }
+        .sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #e3e8ef;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.download-btn {
+    color: #1e3a8a !important;
+    font-weight: 500;
+}
+
+.download-btn:hover {
+    background-color: rgba(30, 58, 138, 0.1) !important;
+}
     </style>
 </head>
 <body>
@@ -289,29 +520,38 @@
         </a>
         <a href="#" class="menu-item">
             <i class="fas fa-chart-line"></i>
-            <span>Charts</span>
+            <span>Analytics</span>
         </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-download"></i>
-            <span>Downloads</span>
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </a>
+
+        <div class="sidebar-footer">
+    <a href="#" id="downloadBtn" class="menu-item download-btn">
+        <i class="fas fa-download"></i>
+        <span>Download Data</span>
+    </a>
+</div>
+
     </div>
 
+
     <div class="main-content">
+        <div class="dashboard-header">
+            <h1>Arista Vault Performance Dashboard</h1>
+            <button id="refreshBtn" class="refresh-btn">
+                <i class="fas fa-sync-alt"></i>
+                <span>Refresh Data</span>
+            </button>
+        </div>
+
         <div class="top-stats">
             <div class="stat-card">
                 <div class="icon">
                     <i class="fas fa-link"></i>
                 </div>
                 <div class="stat-card-info">
-                    <div class="number">4452</div>
-                    <div class="label">Connections</div>
+                    <div id="totalConnections" class="number">--</div>
+                    <div class="label">Total Connections</div>
                 </div>
-                <div class="percent">12% increase</div>
+                <div id="connectionsPercent" class="percent">39%</div>
             </div>
 
             <div class="stat-card success">
@@ -319,10 +559,10 @@
                     <i class="fas fa-shield-alt"></i>
                 </div>
                 <div class="stat-card-info">
-                    <div class="number">54</div>
-                    <div class="label">Saved from Theft</div>
+                    <div id="totalSavedFromTheft" class="number">--</div>
+                    <div class="label">Separation Alarms</div>
                 </div>
-                <div class="percent">9% increase</div>
+                <div id="savedPercent" class="percent">15.4%</div>
             </div>
 
             <div class="stat-card">
@@ -330,231 +570,1046 @@
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-card-info">
-                    <div class="number">1244</div>
+                    <div id="totalUsers" class="number">--</div>
                     <div class="label">Users</div>
                 </div>
-                <div class="percent">32% increase</div>
+                <div id="usersPercent" class="percent">--</div>
+            </div>
+
+            <div class="stat-card warning">
+                <div class="icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-card-info">
+                    <div id="totalAlarms" class="number">--</div>
+                    <div class="label">Total Alarms</div>
+                </div>
+                <div id="alarmsPercent" class="percent">+22.8%</div>
+            </div>
+        </div>
+
+        <div class="platform-stats">
+            <div class="platform-card">
+                <h3>
+                    <div class="platform-card-icon ios">
+                        <i class="fab fa-apple"></i>
+                    </div>
+                    iOS Platform Statistics
+                </h3>
+                <div class="platform-stats-grid">
+                    <div class="platform-stat-item">
+                        <div class="label">Total Users</div>
+                        <div id="iosUsers" class="value">--</div>
+                    </div>
+                    <div class="platform-stat-item">
+                        <div class="label">Active + Running Devices</div>
+                        <div id="iosActiveDevices" class="value">--</div>
+                    </div>
+                    <div class="platform-stat-item">
+                        <div class="label">Avg. Connection Time</div>
+                        <div id="iosAvgConnTime" class="value">--</div>
+                    </div>
+                    <div class="platform-stat-item">
+                        <div class="label">Alarm Triggers</div>
+                        <div id="iosAlarms" class="value">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="platform-card">
+                <h3>
+                    <div class="platform-card-icon android">
+                        <i class="fab fa-android"></i>
+                    </div>
+                    Android Platform Statistics
+                </h3>
+                <div class="platform-stats-grid">
+                    <div class="platform-stat-item">
+                        <div class="label">Total Users</div>
+                        <div id="androidUsers" class="value">--</div>
+                    </div>
+                    <div class="platform-stat-item">
+                        <div class="label">Active + Running Devices</div>
+                        <div id="androidActiveDevices" class="value">--</div>
+                    </div>
+                    <div class="platform-stat-item">
+                        <div class="label">Avg. Connection Time</div>
+                        <div id="androidAvgConnTime" class="value">--</div>
+                    </div>
+                    <div class="platform-stat-item">
+                        <div class="label">Alarm Triggers</div>
+                        <div id="androidAlarms" class="value">--</div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="charts-row">
             <div class="chart-container big-chart">
-                <h3>Reports</h3>
-                <div class="time">Today</div>
+                <h3>User Activity Trends</h3>
+                <div class="time-period-selector">
+                    <button class="time-btn active" data-period="monthly">Monthly</button>
+                    <button class="time-btn" data-period="weekly">Weekly</button>
+                    <button class="time-btn" data-period="daily">Daily</button>
+                </div>
                 <div id="userActivityChart" class="report-chart"></div>
             </div>
 
             <div class="chart-container small-chart">
-                <h3>Arista Report</h3>
-                <div class="time">Today</div>
-                <div id="reportPieChart" class="report-chart"></div>
+                <h3>Device Type Distribution</h3>
+                <div id="deviceTypeChart" class="report-chart"></div>
             </div>
         </div>
 
         <div class="user-table-container">
             <h3>
-                Recent Users
-                <span>Today</span>
+                Active Users
+                <span>Last Updated: <span id="lastUpdated">--</span></span>
             </h3>
             <table class="user-table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Customer</th>
-                        <th>Device</th>
+                        <th>User</th>
+                        <th>Platform</th>
+                        <th>Device Type</th>
+                        <th>Last Activity</th>
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="usersTableBody">
                     <tr>
-                        <td>1</td>
-                        <td>Sheetal Sharma</td>
-                        <td><a href="#">Wallet</a></td>
-                        <td><span class="status status-active">Active</span></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Rajveer Singh</td>
-                        <td><a href="#">Tag</a></td>
-                        <td><span class="status status-running">Running</span></td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Yugal Krishna</td>
-                        <td><a href="#">Wallet</a></td>
-                        <td><span class="status status-active">Active</span></td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Usha Devi</td>
-                        <td><a href="#">Wallet</a></td>
-                        <td><span class="status status-inactive">In-active</span></td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Karan Sati</td>
-                        <td><a href="#">Tag</a></td>
-                        <td><span class="status status-active">Active</span></td>
+                        <td colspan="6" class="empty-row">Loading user data...</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="charts-row">
+            <div class="chart-container small-chart">
+                <h3>Alarm Type Distribution</h3>
+                <div id="alarmTypeChart" class="report-chart"></div>
+            </div>
+
+            <div class="chart-container small-chart">
+        <h3>iOS App Version Distribution</h3>
+        <div id="iosAppVersionChart" class="report-chart"></div>
+    </div>
+
+    <div class="chart-container small-chart">
+        <h3>Android App Version Distribution</h3>
+        <div id="androidAppVersionChart" class="report-chart"></div>
+    </div>
+
+            <div class="chart-container small-chart">
+                <h3>Connection vs Disconnection Patterns</h3>
+                <div id="connectionPatternsChart" class="report-chart"></div>
+            </div>
+        </div>
+
+        <div class="charts-row">
             <div class="chart-container big-chart">
-                <h3>User Activity by Platform</h3>
-                <div id="platformChart" class="report-chart"></div>
+                <h3>Platform Performance Comparison</h3>
+                <div id="platformComparisonChart" class="report-chart"></div>
             </div>
         </div>
     </div>
 
 <script>
-    async function fetchData() {
+    let previousData = null;
+let chartRefs = {};
+let activePeriod = 'monthly';
+
+function calculatePercentChange(current, previous) {
+    if (!previous || previous === 0) return '0%';
+    const change = ((current - previous) / previous) * 100;
+    return (change > 0 ? '+' : '') + change.toFixed(1) + '%';
+}
+
+function timeSince(dateString) {
+    if (!dateString) return 'Unknown';
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+
+    if (isNaN(seconds)) return 'Invalid date';
+
+    let interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) return interval + ' year' + (interval === 1 ? '' : 's') + ' ago';
+
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) return interval + ' month' + (interval === 1 ? '' : 's') + ' ago';
+
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) return interval + ' day' + (interval === 1 ? '' : 's') + ' ago';
+
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) return interval + ' hour' + (interval === 1 ? '' : 's') + ' ago';
+
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) return interval + ' minute' + (interval === 1 ? '' : 's') + ' ago';
+
+    return Math.floor(seconds) + ' second' + (seconds === 1 ? '' : 's') + ' ago';
+}
+
+function generateStatus(device) {
+    if (!device) return 'status-inactive';
+
+    if (device.connectionStatus === "connected") {
+        return 'status-active';
+    }
+
+    if (device.deviceStatus !== undefined) {
+        return device.deviceStatus === 1 ? 'status-running' : 'status-inactive';
+    }
+
+    if (device.lastConnectionTime || device.updatedAt) {
         try {
-            const response = await fetch('/fetch-data');
-            const data = await response.json();
-            if (data.error) return;
-            generateDashboard(data);
-        } catch (error) {
-            console.error('Fetch error:', error.message);
+            const lastActivity = new Date(device.lastConnectionTime || device.updatedAt);
+            const now = new Date();
+            const hoursDiff = (now - lastActivity) / (1000 * 60 * 60);
+
+            if (hoursDiff < 24) return 'status-active';
+            if (hoursDiff < 72) return 'status-running';
+        } catch (e) {
+            console.error("Error parsing date for status:", e);
         }
     }
 
-    function generateDashboard(data) {
-        let totalConnections = 0,
-            totalDisconnections = 0,
-            appVersions = {},
-            deviceTypes = {},
-            monthlyUsers = {},
-            totalMobileAlarms = 0,
-            totalStartAlarms = 0,
-            totalStopAlarms = 0,
-            totalMarkAsLost = 0,
-            totalRevokeMarkAsLost = 0;
+    return 'status-inactive';
+}
 
-        Object.values(data || {}).forEach(user => {
-            Object.values(user.devices || {}).forEach(device => {
-                totalConnections += device.connectedCount ?? 0;
-                totalDisconnections += device.disconnectedCount ?? 0;
-                appVersions[device.appVersion ?? "Unknown"] = (appVersions[device.appVersion ?? "Unknown"] || 0) + 1;
-                deviceTypes[device.deviceType ?? "Unknown"] = (deviceTypes[device.deviceType ?? "Unknown"] || 0) + 1;
+function updateUserTable(data) {
+    const tableBody = document.getElementById('usersTableBody');
+    tableBody.innerHTML = '';
 
-                // Track alarm data
-                totalMobileAlarms += device.mobileAlarmCount ?? 0;
-                totalStartAlarms += device.startAlarmCount ?? 0;
-                totalStopAlarms += device.stopAlarmCount ?? 0;
-
-                // Track mark as lost data
-                totalMarkAsLost += device.markAsLostCount ?? 0;
-                totalRevokeMarkAsLost += device.revokeMarkAsLostCount ?? 0;
-
-                if (device.createdAt) {
-                    let month = new Date(device.createdAt).toLocaleString('default', { month: 'short', year: 'numeric' });
-                    monthlyUsers[month] = (monthlyUsers[month] || 0) + 1;
-                }
-            });
-        });
-
-        // User Activity Chart
-        Plotly.newPlot('userActivityChart', [{
-            x: Object.keys(monthlyUsers),
-            y: Object.values(monthlyUsers),
-            type: 'scatter',
-            mode: 'lines+markers',
-            line: {
-                shape: 'spline',
-                color: '#4f46e5',
-                width: 3
-            },
-            marker: {
-                size: 8,
-                color: '#4f46e5'
-            },
-            fill: 'tozeroy',
-            fillcolor: 'rgba(79, 70, 229, 0.1)'
-        }], {
-            title: {
-                text: 'Monthly Active Users',
-                font: {
-                    family: 'Poppins, sans-serif',
-                    size: 16,
-                    color: '#1e293b'
-                }
-            },
-            xaxis: {
-                showgrid: false,
-                zeroline: false,
-                tickfont: {
-                    family: 'Poppins, sans-serif',
-                    size: 12,
-                    color: '#64748b'
-                }
-            },
-            yaxis: {
-                gridcolor: '#f1f5f9',
-                tickfont: {
-                    family: 'Poppins, sans-serif',
-                    size: 12,
-                    color: '#64748b'
-                }
-            },
-            margin: { t: 40, b: 40, l: 40, r: 40 },
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)'
-        });
-
-
-        Plotly.newPlot('reportPieChart', [{
-            labels: Object.keys(deviceTypes),
-            values: Object.values(deviceTypes),
-            type: 'pie',
-            hole: 0.4,
-            marker: {
-                colors: ['#4f46e5', '#ef4444', '#22c55e', '#f59e0b', '#06b6d4']
-            }
-        }], {
-            title: {
-                text: 'Device Types',
-                font: {
-                    family: 'Poppins, sans-serif',
-                    size: 16,
-                    color: '#1e293b'
-                }
-            },
-            margin: { t: 40, b: 40, l: 20, r: 20 },
-            paper_bgcolor: 'rgba(0,0,0,0)'
-        });
-
-
-        Plotly.newPlot('platformChart', [{
-            labels: Object.keys(appVersions),
-            values: Object.values(appVersions),
-            type: 'pie',
-            hole: 0.4,
-            marker: {
-                colors: ['#4f46e5', '#ef4444', '#22c55e', '#f59e0b', '#06b6d4']
-            }
-        }], {
-            title: {
-                text: 'App Version Distribution',
-                font: {
-                    family: 'Poppins, sans-serif',
-                    size: 16,
-                    color: '#1e293b'
-                }
-            },
-            margin: { t: 40, b: 40, l: 20, r: 20 },
-            paper_bgcolor: 'rgba(0,0,0,0)'
-        });
-
-        // Update the stats in the top cards
-        document.querySelector('.stat-card:nth-child(1) .number').textContent = totalConnections;
-        document.querySelector('.stat-card:nth-child(3) .number').textContent = Object.values(data || {}).length;
+    if (!data || Object.keys(data).length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="empty-row">No user data available</td></tr>';
+        return;
     }
 
+    const users = [];
+    Object.entries(data).forEach(([userId, userData]) => {
+        if (userData.devices) {
+            Object.entries(userData.devices).forEach(([deviceId, deviceData]) => {
+                // Only add users with known platforms
+                const platform = deviceData.platform || deviceData.deviceType || '';
+                if (platform && platform.toLowerCase() !== 'unknown') {
+                    users.push({
+                        userId,
+                        name: userData.name || userData.userName || 'Unknown User',
+                        email: userData.email || userData.userEmail || userId,
+                        deviceType: deviceData.customDeviceName || deviceData.originalDeviceName || deviceData.deviceType || 'Unknown',
+                        platform: platform,
+                        appVersion: deviceData.appVersion || deviceData.currentAppVersion || 'Unknown',
+                        lastActivity: deviceData.lastConnectionTime || deviceData.updatedAt || deviceData.createdAt || null,
+                        status: generateStatus(deviceData)
+                    });
+                }
+            });
+        }
+    });
+
+    users.sort((a, b) => {
+        if (!a.lastActivity) return 1;
+        if (!b.lastActivity) return -1;
+        return new Date(b.lastActivity) - new Date(a.lastActivity);
+    });
+
+    users.slice(0, 10).forEach((user, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${user.name}</td>
+            <td><span class="badge ${user.platform.toLowerCase().includes('ios') ? 'badge-primary' : 'badge-success'}">${user.platform}</span></td>
+            <td>${user.deviceType}</td>
+            <td>${user.lastActivity ? timeSince(user.lastActivity) : 'Never'}</td>
+            <td><span class="status ${user.status}">${user.status.replace('status-', '')}</span></td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+}
+async function fetchData() {
+    try {
+        document.getElementById('refreshBtn').innerHTML = '<span class="loader"></span> Loading...';
+
+        const response = await fetch('/fetch-data');
+        const data = await response.json();
+
+        if (data.error) {
+            console.error(data.error);
+            alert('Error fetching data: ' + data.error);
+            return;
+        }
+
+        if (!previousData) {
+            previousData = data;
+        }
+
+        processData(data);
+        previousData = data;
+
+        document.getElementById('refreshBtn').innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+    } catch (error) {
+        console.error('Fetch error:', error.message);
+        document.getElementById('refreshBtn').innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+        alert('Failed to fetch data: ' + error.message);
+    }
+}
+
+function processData(data) {
+    updateUserTable(data);
+
+    let stats = {
+        totalConnections: 0,
+        totalDisconnections: 0,
+        totalUsers: 0,
+        totalAlarms: 0,
+
+        totalSavedFromTheft: 0,
+        iosUsers: 0,
+        androidUsers: 0,
+        iosActiveDevices: 0,
+        androidActiveDevices: 0,
+        iosAlarms: 0,
+        androidAlarms: 0,
+        iosConnTime: [],
+        androidConnTime: [],
+        appVersions: {
+            ios: {},
+            android: {}
+        },
+        deviceTypes: {},
+        monthlyActivity: {},
+        weeklyActivity: {},
+        dailyActivity: {},
+        alarmTypes: {
+            'Mobile Alarm': 0,
+            'Start Alarm': 0,
+            'Stop Alarm': 0,
+            'Mark as Lost': 0
+        },
+        connectionPatterns: {
+            connections: [],
+            disconnections: []
+        }
+    };
+
+    Object.values(data || {}).forEach(user => {
+        Object.values(user.devices || {}).forEach(device => {
+        const platform = device.platform || device.deviceType || '';
+
+
+            if (!platform || platform.toLowerCase() === 'unknown') return;
+            stats.totalConnections += device.connectedCount || 0;
+            stats.totalDisconnections += device.disconnectedCount || 0;
+
+            const isIOS = (device.platform || device.deviceType || '').toLowerCase().includes('ios');
+
+            if (isIOS) {
+                stats.iosUsers++;
+                if (generateStatus(device) === 'status-active'|| generateStatus(device) === 'status-running') {
+                    stats.iosActiveDevices++;
+                }
+                stats.iosAlarms += (device.mobileAlarmCount || 0) +
+                                   (device.startAlarmCount || 0) +
+                                   (device.stopAlarmCount || 0) +
+                                   (device.markAsLostCount || 0);
+
+                if (device.avgConnectionTime) {
+                    stats.iosConnTime.push(device.avgConnectionTime);
+                }
+            } else {
+                stats.androidUsers++;
+                if (generateStatus(device) === 'status-active'||generateStatus(device) === 'status-running') {
+                    stats.androidActiveDevices++;
+                }
+                stats.androidAlarms += (device.mobileAlarmCount || 0) +
+                                       (device.startAlarmCount || 0) +
+                                       (device.stopAlarmCount || 0) +
+                                       (device.markAsLostCount || 0);
+
+                if (device.avgConnectionTime) {
+                    stats.androidConnTime.push(device.avgConnectionTime);
+                }
+            }
+
+            const version = device.appVersion || device.currentAppVersion;
+            if (version) {
+                if (isIOS) {
+                    stats.appVersions.ios[version] = (stats.appVersions.ios[version] || 0) + 1;
+                } else {
+                    stats.appVersions.android[version] = (stats.appVersions.android[version] || 0) + 1;
+                }
+            }
+
+            const deviceType = device.customDeviceName || device.originalDeviceName || 'Unknown';
+            stats.deviceTypes[deviceType] = (stats.deviceTypes[deviceType] || 0) + 1;
+
+            stats.totalAlarms += (device.mobileAlarmCount || 0) +
+                                 (device.startAlarmCount || 0) +
+                                 (device.stopAlarmCount || 0) +
+                                 (device.markAsLostCount || 0);
+
+            stats.alarmTypes['Mobile Alarm'] += device.mobileAlarmCount || 0;
+            stats.alarmTypes['Start Alarm'] += device.startAlarmCount || 0;
+            stats.alarmTypes['Stop Alarm'] += device.stopAlarmCount || 0;
+            stats.alarmTypes['Mark as Lost'] += device.markAsLostCount || 0;
+            stats.totalUsers = stats.iosUsers + stats.androidUsers;
+
+            if (device.createdAt) {
+                let creationDate;
+                try {
+                    if (device.createdAt.includes(' ')) {
+                        creationDate = new Date(device.createdAt);
+                    } else {
+                        creationDate = new Date(device.createdAt);
+                    }
+
+                    if (!isNaN(creationDate.getTime())) {
+                        const monthYear = creationDate.toLocaleString('default', { month: 'short', year: 'numeric' });
+                        const weekNumber = getWeekNumber(creationDate);
+                        const weekYear = `Week ${weekNumber}, ${creationDate.getFullYear()}`;
+                        const dayDate = creationDate.toISOString().split('T')[0];
+
+                        stats.monthlyActivity[monthYear] = (stats.monthlyActivity[monthYear] || 0) + 1;
+                        stats.weeklyActivity[weekYear] = (stats.weeklyActivity[weekYear] || 0) + 1;
+                        stats.dailyActivity[dayDate] = (stats.dailyActivity[dayDate] || 0) + 1;
+
+                        const today = new Date();
+                        const diffDays = Math.floor((today - creationDate) / (1000 * 60 * 60 * 24)) || 1;
+
+                        const dateStr = today.toISOString().split('T')[0];
+                        stats.connectionPatterns.connections.push({
+                            date: dateStr,
+                            count: Math.round((device.connectedCount || 0) / diffDays)
+                        });
+
+                        stats.connectionPatterns.disconnections.push({
+                            date: dateStr,
+                            count: Math.round((device.disconnectedCount || 0) / diffDays)
+                        });
+
+                        for (let i = 1; i <= Math.min(4, diffDays/7); i++) {
+                            const pastDate = new Date(today);
+                            pastDate.setDate(pastDate.getDate() - (i * 7));
+                            const pastDateStr = pastDate.toISOString().split('T')[0];
+
+                            stats.connectionPatterns.connections.push({
+                                date: pastDateStr,
+                                count: Math.round((device.connectedCount || 0) / diffDays * (1 - i/10))
+                            });
+
+                            stats.connectionPatterns.disconnections.push({
+                                date: pastDateStr,
+                                count: Math.round((device.disconnectedCount || 0) / diffDays * (1 - i/10))
+                            });
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error parsing date:", e);
+                }
+            }
+
+            if (device.stopAlarmCount && device.startAlarmCount) {
+                stats.totalSavedFromTheft += Math.min(device.stopAlarmCount, device.startAlarmCount);
+            }
+        });
+    });
+
+    stats.iosAvgConnTime = stats.iosConnTime.length > 0 ?
+        stats.iosConnTime.reduce((sum, time) => sum + time, 0) / stats.iosConnTime.length :
+        0;
+
+    stats.androidAvgConnTime = stats.androidConnTime.length > 0 ?
+        stats.androidConnTime.reduce((sum, time) => sum + time, 0) / stats.androidConnTime.length :
+        0;
+
+    updateDashboardElements(stats);
+}
+
+function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
+function updateDashboardElements(stats) {
+    document.getElementById('totalConnections').textContent = stats.totalConnections.toLocaleString();
+    document.getElementById('totalSavedFromTheft').textContent = stats.totalSavedFromTheft.toLocaleString();
+    document.getElementById('totalUsers').textContent = stats.totalUsers.toLocaleString();
+    document.getElementById('totalAlarms').textContent = stats.totalAlarms.toLocaleString();
+
+    document.getElementById('iosUsers').textContent = stats.iosUsers.toLocaleString();
+    document.getElementById('iosActiveDevices').textContent = stats.iosActiveDevices.toLocaleString();
+    document.getElementById('iosAvgConnTime').textContent = formatTime(stats.iosAvgConnTime);
+    document.getElementById('iosAlarms').textContent = stats.iosAlarms.toLocaleString();
+
+    document.getElementById('androidUsers').textContent = stats.androidUsers.toLocaleString();
+    document.getElementById('androidActiveDevices').textContent = stats.androidActiveDevices.toLocaleString();
+    document.getElementById('androidAvgConnTime').textContent = formatTime(stats.androidAvgConnTime);
+    document.getElementById('androidAlarms').textContent = stats.androidAlarms.toLocaleString();
+
+    if (previousData) {
+        const prevStats = calculatePreviousStats(previousData);
+        document.getElementById('usersPercent').textContent =
+            calculatePercentChange(stats.totalUsers, prevStats.totalUsers);
+
+    }
+
+    createUserActivityChart(stats);
+    createDeviceTypeChart(stats);
+    createAlarmTypeChart(stats);
+    createAppVersionChart(stats);
+    createConnectionPatternsChart(stats);
+    createPlatformComparisonChart(stats);
+}
+
+function formatTime(minutes) {
+    if (isNaN(minutes) || minutes === 0) return 'N/A';
+    if (minutes < 60) return Math.round(minutes) + ' min';
+    return Math.floor(minutes / 60) + 'h ' + Math.round(minutes % 60) + 'm';
+}
+
+function calculatePreviousStats(data) {
+    let totalConnections = 0,
+        totalDisconnections = 0,
+        totalUsers = Object.keys(data || {}).length,
+        totalAlarms = 0,
+        totalSavedFromTheft = 0;
+
+    Object.values(data || {}).forEach(user => {
+        Object.values(user.devices || {}).forEach(device => {
+            totalConnections += device.connectedCount || 0;
+            totalDisconnections += device.disconnectedCount || 0;
+
+            totalAlarms += (device.mobileAlarmCount || 0) +
+                          (device.startAlarmCount || 0) +
+                          (device.stopAlarmCount || 0) +
+                          (device.markAsLostCount || 0);
+
+            if (device.stopAlarmCount && device.startAlarmCount) {
+                totalSavedFromTheft += Math.min(device.stopAlarmCount, device.startAlarmCount);
+            }
+        });
+    });
+
+    return {
+        totalConnections,
+        totalDisconnections,
+        totalUsers,
+        totalAlarms,
+        totalSavedFromTheft
+    };
+}
+
+function createDeviceTypeChart(stats) {
+    const consolidatedDeviceTypes = {};
+
+    Object.keys(stats.deviceTypes).forEach(deviceType => {
+        if (deviceType.toLowerCase().includes('wallet')) {
+            consolidatedDeviceTypes['Wallet'] = (consolidatedDeviceTypes['Wallet'] || 0) + stats.deviceTypes[deviceType];
+        } else {
+            consolidatedDeviceTypes['Key Chain'] = (consolidatedDeviceTypes['Key Chain'] || 0) + stats.deviceTypes[deviceType];
+        }
+    });
+
+    Plotly.newPlot('deviceTypeChart', [{
+        labels: Object.keys(consolidatedDeviceTypes),
+        values: Object.values(consolidatedDeviceTypes),
+        type: 'pie',
+        hole: 0.4,
+        marker: {
+            colors: ['#4f46e5', '#22c55e']
+        },
+        textinfo: 'label+percent',
+        insidetextorientation: 'radial'
+    }], {
+        margin: { t: 30, b: 30, l: 30, r: 30 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        height: 300,
+        autosize: true
+    });
+
+    chartRefs.deviceType = document.getElementById('deviceTypeChart');
+}
+
+function createAlarmTypeChart(stats) {
+    const labels = Object.keys(stats.alarmTypes);
+    const values = Object.values(stats.alarmTypes);
+
+    Plotly.newPlot('alarmTypeChart', [{
+        labels: labels,
+        values: values,
+        type: 'pie',
+        hole: 0.4,
+        marker: {
+            colors: ['#4f46e5', '#ef4444', '#22c55e', '#f59e0b']
+        },
+        textinfo: 'none',
+        insidetextorientation: 'radial'
+    }], {
+        margin: { t: 30, b: 30, l: 30, r: 30 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        height: 300,
+        autosize: true
+    });
+
+    chartRefs.alarmType = document.getElementById('alarmTypeChart');
+}
+
+function createAppVersionChart(stats) {
+    // Create iOS app version chart
+    Plotly.newPlot('iosAppVersionChart', [{
+        labels: Object.keys(stats.appVersions.ios),
+        values: Object.values(stats.appVersions.ios),
+        type: 'pie',
+        hole: 0.4,
+        marker: {
+            colors: ['#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe']
+        },
+        textinfo: 'none',
+        name: 'iOS Versions'
+    }], {
+        annotations: [
+            {
+                text: 'iOS',
+                font: {
+                    size: 12,
+                    family: 'Poppins, sans-serif',
+                    color: '#3b82f6'
+                },
+                showarrow: false,
+                x: 0.5,
+                y: 0.5
+            }
+        ],
+        margin: { t: 30, b: 30, l: 30, r: 30 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        height: 300,
+        autosize: true
+    });
+
+    // Create Android app version chart
+    Plotly.newPlot('androidAppVersionChart', [{
+        labels: Object.keys(stats.appVersions.android),
+        values: Object.values(stats.appVersions.android),
+        type: 'pie',
+        hole: 0.4,
+        marker: {
+            colors: ['#22c55e', '#4ade80', '#86efac', '#bbf7d0', '#dcfce7']
+        },
+        textinfo: 'none',
+        name: 'Android Versions'
+    }], {
+        annotations: [
+            {
+                text: 'Android',
+                font: {
+                    size: 12,
+                    family: 'Poppins, sans-serif',
+                    color: '#22c55e'
+                },
+                showarrow: false,
+                x: 0.5,
+                y: 0.5
+            }
+        ],
+        margin: { t: 30, b: 30, l: 30, r: 30 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        height: 300,
+        autosize: true
+    });
+
+    // Update chart references
+    chartRefs.iosAppVersion = document.getElementById('iosAppVersionChart');
+    chartRefs.androidAppVersion = document.getElementById('androidAppVersionChart');
+}
+function createConnectionPatternsChart(stats) {
+    const connectionsByDate = {};
+    const disconnectionsByDate = {};
+
+    stats.connectionPatterns.connections.forEach(item => {
+        connectionsByDate[item.date] = (connectionsByDate[item.date] || 0) + item.count;
+    });
+
+    stats.connectionPatterns.disconnections.forEach(item => {
+        disconnectionsByDate[item.date] = (disconnectionsByDate[item.date] || 0) + item.count;
+    });
+
+    const dates = [...new Set([...Object.keys(connectionsByDate), ...Object.keys(disconnectionsByDate)])];
+    dates.sort((a, b) => new Date(a) - new Date(b));
+
+    const connectionData = dates.map(date => connectionsByDate[date] || 0);
+    const disconnectionData = dates.map(date => disconnectionsByDate[date] || 0);
+
+    const formattedDates = dates.map(date => {
+        const d = new Date(date);
+        return `${d.getDate()}/${d.getMonth() + 1}`;
+    });
+
+    Plotly.newPlot('connectionPatternsChart', [
+        {
+            x: formattedDates,
+            y: connectionData,
+            type: 'bar',
+            name: 'Connections',
+            marker: {
+                color: '#4f46e5'
+            }
+        },
+        {
+            x: formattedDates,
+            y: disconnectionData,
+            type: 'bar',
+            name: 'Disconnections',
+            marker: {
+                color: '#ef4444'
+            }
+        }
+    ], {
+        barmode: 'group',
+        xaxis: {
+            showgrid: false,
+            tickangle: -45,
+            tickfont: {
+                family: 'Poppins, sans-serif',
+                size: 10,
+                color: '#64748b'
+            }
+        },
+        yaxis: {
+            gridcolor: '#f1f5f9',
+            tickfont: {
+                family: 'Poppins, sans-serif',
+                size: 12,
+                color: '#64748b'
+            }
+        },
+        margin: { t: 30, b: 60, l: 40, r: 20 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        legend: {
+            orientation: 'h',
+            y: 1.1,
+            x: 0.5,
+            xanchor: 'center'
+        },
+        height: 300,
+        autosize: true
+    });
+
+    chartRefs.connectionPatterns = document.getElementById('connectionPatternsChart');
+}
+
+function createUserActivityChart(stats) {
+    let activityData;
+
+    if (activePeriod === 'monthly') {
+        activityData = stats.monthlyActivity;
+
+        // Add months up to current month if they don't exist
+        const currentDate = new Date();
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        // Make sure we have all months from the past year up to current month
+        for (let i = 11; i >= 0; i--) {
+            const d = new Date();
+            d.setMonth(currentDate.getMonth() - i);
+            const monthYearKey = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+
+            if (!activityData[monthYearKey]) {
+                activityData[monthYearKey] = 0;
+            }
+        }
+    } else if (activePeriod === 'weekly') {
+        activityData = stats.weeklyActivity;
+
+        // Add weeks up to current week if they don't exist
+        const currentDate = new Date();
+        const currentWeek = getWeekNumber(currentDate);
+
+        // Add up to 12 weeks of data
+        for (let i = 11; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - (i * 7));
+            const weekYear = `Week ${getWeekNumber(d)}, ${d.getFullYear()}`;
+
+            if (!activityData[weekYear]) {
+                activityData[weekYear] = 0;
+            }
+        }
+    } else {
+        activityData = stats.dailyActivity;
+
+        // Add days up to current day if they don't exist
+        const currentDate = new Date();
+
+        // Add up to 30 days of data
+        for (let i = 29; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const dayDate = d.toISOString().split('T')[0];
+
+            if (!activityData[dayDate]) {
+                activityData[dayDate] = 0;
+            }
+        }
+    }
+
+    const sortedKeys = Object.keys(activityData).sort((a, b) => {
+        if (activePeriod === 'daily') {
+            return new Date(a) - new Date(b);
+        } else if (activePeriod === 'monthly') {
+            // Parse month year format (e.g., "Jan 2025")
+            const [monthA, yearA] = a.split(' ');
+            const [monthB, yearB] = b.split(' ');
+
+            const monthIndex = {
+                'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+                'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+            };
+
+            if (yearA !== yearB) {
+                return parseInt(yearA) - parseInt(yearB);
+            }
+            return monthIndex[monthA] - monthIndex[monthB];
+        } else if (activePeriod === 'weekly') {
+            // Parse week year format (e.g., "Week 1, 2025")
+            const weekA = parseInt(a.split(' ')[1]);
+            const yearA = parseInt(a.split(', ')[1]);
+            const weekB = parseInt(b.split(' ')[1]);
+            const yearB = parseInt(b.split(', ')[1]);
+
+            if (yearA !== yearB) {
+                return yearA - yearB;
+            }
+            return weekA - weekB;
+        }
+        return 0;
+    });
+
+    const sortedData = {};
+    sortedKeys.forEach(key => {
+        sortedData[key] = activityData[key];
+    });
+
+    Plotly.newPlot('userActivityChart', [{
+        x: Object.keys(sortedData),
+        y: Object.values(sortedData),
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: {
+            shape: 'spline',
+            color: '#4f46e5',
+            width: 3
+        },
+        marker: {
+            size: 8,
+            color: '#4f46e5'
+        },
+        fill: 'tozeroy',
+        fillcolor: 'rgba(79, 70, 229, 0.1)'
+    }], {
+        title: {
+            text: `User Activity (${activePeriod.charAt(0).toUpperCase() + activePeriod.slice(1)})`,
+            font: {
+                family: 'Poppins, sans-serif',
+                size: 16,
+                color: '#1e293b'
+            }
+        },
+        xaxis: {
+            showgrid: false,
+            zeroline: false,
+            tickfont: {
+                family: 'Poppins, sans-serif',
+                size: 12,
+                color: '#64748b'
+            }
+        },
+        yaxis: {
+            gridcolor: '#f1f5f9',
+            tickfont: {
+                family: 'Poppins, sans-serif',
+                size: 12,
+                color: '#64748b'
+            }
+        },
+        margin: { t: 50, b: 40, l: 50, r: 40 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        height: 300,
+        autosize: true
+    });
+
+    chartRefs.userActivity = document.getElementById('userActivityChart');
+}
+function createPlatformComparisonChart(stats) {
+    const metrics = ['Users', 'Active Devices', 'Alarms'];
+    const iosData = [stats.iosUsers, stats.iosActiveDevices, stats.iosAlarms];
+    const androidData = [stats.androidUsers, stats.androidActiveDevices, stats.androidAlarms];
+
+    Plotly.newPlot('platformComparisonChart', [
+        {
+            x: metrics,
+            y: iosData,
+            type: 'bar',
+            name: 'iOS',
+            marker: {
+                color: '#3b82f6'
+            }
+        },
+        {
+            x: metrics,
+            y: androidData,
+            type: 'bar',
+            name: 'Android',
+            marker: {
+                color: '#22c55e'
+            }
+        }
+    ], {
+        barmode: 'group',
+        xaxis: {
+            showgrid: false,
+            tickfont: {
+                family: 'Poppins, sans-serif',
+                size: 12,
+                color: '#64748b'
+            }
+        },
+        yaxis: {
+            gridcolor: '#f1f5f9',
+            tickfont: {
+                family: 'Poppins, sans-serif',
+                size: 12,
+                color: '#64748b'
+            }
+        },
+        margin: { t: 30, b: 40, l: 50, r: 20 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        legend: {
+            orientation: 'h',
+            y: 1.1,
+            x: 0.5,
+            xanchor: 'center'
+        },
+        height: 300,
+        autosize: true
+    });
+
+    chartRefs.platformComparison = document.getElementById('platformComparisonChart');
+}
+
+window.addEventListener('resize', function() {
+    Object.values(chartRefs).forEach(chart => {
+        if (chart) {
+            Plotly.relayout(chart, {
+                autosize: true
+            });
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Set href for Users menu item
+    const usersMenuItem = document.querySelector('.menu-item:nth-child(3)');
+    usersMenuItem.setAttribute('href', '/users');
+
+    // Set href for Analytics menu item
+    const analyticsMenuItem = document.querySelector('.menu-item:nth-child(4)');
+    analyticsMenuItem.setAttribute('href', '/analytics');
+
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === currentPath) {
+            item.classList.add('active');
+        } else if (currentPath === '/' && item.querySelector('i').classList.contains('fa-th-large')) {
+            item.classList.add('active');
+        }
+    });
 
     fetchData();
 
+    document.getElementById('refreshBtn').addEventListener('click', fetchData);
+
+    document.querySelectorAll('.time-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            activePeriod = this.dataset.period;
+            if (previousData) {
+                const stats = calculatePreviousStats(previousData);
+                createUserActivityChart(stats);
+            }
+        });
+
+    });
+     document.getElementById('downloadBtn').addEventListener('click', async function(e) {
+        e.preventDefault();
+
+        try {
+            // Change button appearance to show loading state
+            const originalContent = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+            this.style.pointerEvents = 'none';
+
+            // Fetch the data
+            const response = await fetch('/download-data');
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to download data');
+            }
+
+            // Get the filename from the Content-Disposition header if available
+            let filename = 'aristavault_data.json';
+            const contentDisposition = response.headers.get('Content-Disposition');
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1];
+                }
+            }
+
+            // Convert response to blob
+            const blob = await response.blob();
+
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename;
+
+            // Append to body, click and remove
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            // Restore button appearance
+            this.innerHTML = originalContent;
+            this.style.pointerEvents = 'auto';
+
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Error downloading data: ' + error.message);
+
+            // Restore button appearance
+            this.innerHTML = originalContent || '<i class="fas fa-download"></i> Download Data';
+            this.style.pointerEvents = 'auto';
+        }
+    });
 
     setInterval(fetchData, 5 * 60 * 1000);
+});
 </script>
+</body>
+</html>

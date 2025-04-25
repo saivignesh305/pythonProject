@@ -1,0 +1,651 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Arista Vault - Users</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background-color: #f5f7fb;
+                color: #333;
+                font-family: 'Poppins', sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                min-height: 100vh;
+            }
+            .sidebar {
+                width: 250px;
+                background-color: white;
+                border-right: 1px solid #e3e8ef;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                padding-top: 20px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.05);
+                z-index: 1000;
+            }
+            .sidebar-logo {
+                display: flex;
+                align-items: center;
+                padding: 0 20px 20px;
+                border-bottom: 1px solid #e3e8ef;
+                margin-bottom: 20px;
+            }
+            .sidebar-logo img {
+                height: 40px;
+                margin-right: 10px;
+            }
+            .sidebar-logo span {
+                font-size: 18px;
+                font-weight: 600;
+                color: #1e3a8a;
+            }
+            .menu-item {
+                display: flex;
+                align-items: center;
+                padding: 15px 20px;
+                color: #64748b;
+                text-decoration: none;
+                transition: all 0.3s;
+                margin: 5px 0;
+                border-left: 3px solid transparent;
+            }
+            .menu-item:hover, .menu-item.active {
+                background-color: #f1f5f9;
+                color: #1e3a8a;
+                border-left: 3px solid #1e3a8a;
+            }
+            .menu-item i {
+                margin-right: 15px;
+                font-size: 20px;
+            }
+            .main-content {
+                flex: 1;
+                margin-left: 250px;
+                padding: 20px;
+            }
+            .dashboard-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            .dashboard-header h1 {
+                color: #1e293b;
+                font-size: 24px;
+            }
+            .refresh-btn {
+                background-color: #1e3a8a;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: 'Poppins', sans-serif;
+            }
+            .refresh-btn:hover {
+                background-color: #1e293b;
+            }
+            .user-table-container {
+                background: white;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                margin-bottom: 20px;
+            }
+            .user-table-container h3 {
+                color: #1e293b;
+                margin-bottom: 15px;
+                font-size: 18px;
+                font-weight: 500;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .user-table-container h3 span {
+                color: #64748b;
+                font-size: 14px;
+                font-weight: normal;
+            }
+            .user-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .user-table th {
+                text-align: left;
+                padding: 15px 10px;
+                color: #64748b;
+                font-weight: 500;
+                border-bottom: 1px solid #e3e8ef;
+            }
+            .user-table td {
+                padding: 15px 10px;
+                border-bottom: 1px solid #e3e8ef;
+            }
+            .user-table a {
+                color: #1e3a8a;
+                text-decoration: none;
+            }
+            .status {
+                padding: 5px 10px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 500;
+            }
+            .status-active {
+                background-color: rgba(34, 197, 94, 0.1);
+                color: #22c55e;
+            }
+            .status-running {
+                background-color: rgba(59, 130, 246, 0.1);
+                color: #3b82f6;
+            }
+            .status-inactive {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+            }
+            .badge {
+                display: inline-block;
+                padding: 3px 6px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 500;
+            }
+            .badge-primary {
+                background-color: rgba(59, 130, 246, 0.1);
+                color: #3b82f6;
+            }
+            .badge-success {
+                background-color: rgba(34, 197, 94, 0.1);
+                color: #22c55e;
+            }
+            .empty-row {
+                text-align: center;
+                color: #64748b;
+                font-style: italic;
+            }
+            .loader {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(255,255,255,.3);
+                border-radius: 50%;
+                border-top-color: #fff;
+                animation: spin 1s ease-in-out infinite;
+            }
+            .search-container {
+                margin-bottom: 20px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .search-input {
+                flex: 1;
+                padding: 10px 15px;
+                border-radius: 4px;
+                border: 1px solid #e3e8ef;
+                font-family: 'Poppins', sans-serif;
+            }
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+                gap: 10px;
+            }
+            .pagination button {
+                padding: 8px 12px;
+                border: 1px solid #e3e8ef;
+                border-radius: 4px;
+                background-color: white;
+                cursor: pointer;
+            }
+            .pagination button.active {
+                background-color: #1e3a8a;
+                color: white;
+                border-color: #1e3a8a;
+            }
+            .pagination button:hover:not(.active) {
+                background-color: #f1f5f9;
+            }
+            .filter-container {
+                display: flex;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            .filter-dropdown {
+                padding: 8px 12px;
+                border-radius: 4px;
+                border: 1px solid #e3e8ef;
+                font-family: 'Poppins', sans-serif;
+                background-color: white;
+            }
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            .sidebar-footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                border-top: 1px solid #e3e8ef;
+                padding-top: 10px;
+                margin-top: 10px;
+            }
+
+            .download-btn {
+                color: #1e3a8a !important;
+                font-weight: 500;
+            }
+
+            .download-btn:hover {
+                background-color: rgba(30, 58, 138, 0.1) !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <img src="https://avatars.githubusercontent.com/u/128120806?v=4?s=400" alt="Arista Vault">
+                <span>ARISTA VAULT</span>
+            </div>
+            <a href="/" class="menu-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/users" class="menu-item active">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+           <a href="/analytics" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+
+            <div class="sidebar-footer">
+                <a href="#" id="downloadBtn" class="menu-item download-btn">
+                    <i class="fas fa-download"></i>
+                    <span>Download Data</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1>User Management</h1>
+                <button id="refreshBtn" class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Refresh Data</span>
+                </button>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search users by name, email, or device...">
+                <button id="searchBtn" class="refresh-btn">
+                    <i class="fas fa-search"></i>
+                    <span>Search</span>
+                </button>
+            </div>
+
+            <div class="filter-container">
+                <select id="statusFilter" class="filter-dropdown">
+                    <option value="all">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="running">Running</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+
+                <select id="platformFilter" class="filter-dropdown">
+                    <option value="all">All Platforms</option>
+                    <option value="ios">iOS</option>
+                    <option value="android">Android</option>
+                </select>
+            </div>
+
+            <div class="user-table-container">
+                <h3>
+                    All Users
+                    <span>Last Updated: <span id="lastUpdated">--</span></span>
+                </h3>
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Platform</th>
+                            <th>Device Type</th>
+                            <th>Last Activity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="8" class="empty-row">Loading user data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+
+        <script>
+            let allUsers = [];
+            let filteredUsers = [];
+            let currentPage = 1;
+            const rowsPerPage = 15;
+
+            async function fetchUserData() {
+                try {
+                    document.getElementById('refreshBtn').innerHTML = '<span class="loader"></span> Loading...';
+                    document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="8" class="empty-row">Loading user data...</td></tr>';
+                    const response = await fetch('/fetch-data');
+                    const data = await response.json();
+                    if (data.error) {
+                        console.error(data.error);
+                        alert('Error fetching data: ' + data.error);
+                        return;
+                    }
+                    processUserData(data);
+                    document.getElementById('refreshBtn').innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                    document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+                } catch (error) {
+                    console.error('Fetch error:', error.message);
+                    document.getElementById('refreshBtn').innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                    alert('Failed to fetch data: ' + error.message);
+                }
+            }
+
+            function processUserData(data) {
+                allUsers = [];
+                Object.entries(data).forEach(([userId, userData]) => {
+                    if (userData.devices) {
+                        Object.entries(userData.devices).forEach(([deviceId, deviceData]) => {
+                            allUsers.push({
+                                userId,
+                                name: userData.name || userData.userName || 'Unknown User',
+                                email: userData.email || userData.userEmail || userId,
+                                phoneNumber: userData.phoneNumber || userData.userPhone || 'N/A',
+                                deviceType: deviceData.customDeviceName || deviceData.originalDeviceName || deviceData.deviceType || 'Unknown',
+                                platform: deviceData.platform || deviceData.deviceType || 'Unknown',
+                                appVersion: deviceData.appVersion || deviceData.currentAppVersion || 'Unknown',
+                                lastActivity: deviceData.lastConnectionTime || deviceData.updatedAt || deviceData.createdAt || null,
+                                status: generateStatus(deviceData),
+                                deviceId
+                            });
+                        });
+                    } else {
+                        allUsers.push({
+                            userId,
+                            name: userData.name || userData.userName || 'Unknown User',
+                            email: userData.email || userData.userEmail || userId,
+                            phoneNumber: userData.phoneNumber || userData.userPhone || 'N/A',
+                            deviceType: 'No Device',
+                            platform: 'N/A',
+                            appVersion: 'N/A',
+                            lastActivity: null,
+                            status: 'status-inactive',
+                            deviceId: null
+                        });
+                    }
+                });
+                filterAndDisplayUsers();
+            }
+
+            function filterAndDisplayUsers() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value;
+    const platformFilter = document.getElementById('platformFilter').value;
+
+    filteredUsers = allUsers.filter(user => {
+        // Skip users with unknown platform
+        if (user.platform === 'Unknown' || user.platform === 'N/A') {
+            return false;
+        }
+
+        const matchesSearch =
+            user.name.toLowerCase().includes(searchTerm) ||
+            user.email.toLowerCase().includes(searchTerm) ||
+            user.deviceType.toLowerCase().includes(searchTerm) ||
+            user.phoneNumber.toLowerCase().includes(searchTerm);
+
+        const matchesStatus = statusFilter === 'all' ||
+            (statusFilter === 'active' && user.status === 'status-active') ||
+            (statusFilter === 'running' && user.status === 'status-running') ||
+            (statusFilter === 'inactive' && user.status === 'status-inactive');
+
+        const matchesPlatform = platformFilter === 'all' ||
+            (platformFilter === 'ios' && user.platform.toLowerCase().includes('ios')) ||
+            (platformFilter === 'android' && user.platform.toLowerCase().includes('android'));
+
+        return matchesSearch && matchesStatus && matchesPlatform;
+    });
+
+    filteredUsers.sort((a, b) => {
+        if (!a.lastActivity) return 1;
+        if (!b.lastActivity) return -1;
+        return new Date(b.lastActivity) - new Date(a.lastActivity);
+    });
+
+    displayUsers();
+    updatePagination();
+}
+
+            function displayUsers() {
+                const tableBody = document.getElementById('usersTableBody');
+                tableBody.innerHTML = '';
+
+                if (filteredUsers.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="8" class="empty-row">No users match your filters</td></tr>';
+                    return;
+                }
+
+                const startIndex = (currentPage - 1) * rowsPerPage;
+                const endIndex = Math.min(startIndex + rowsPerPage, filteredUsers.length);
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const user = filteredUsers[i];
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${i + 1}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phoneNumber}</td>
+                        <td><span class="badge ${user.platform.toLowerCase().includes('ios') ? 'badge-primary' : user.platform.toLowerCase().includes('android') ? 'badge-success' : ''}">${user.platform}</span></td>
+                        <td>${user.deviceType}</td>
+                        <td>${user.lastActivity ? timeSince(user.lastActivity) : 'Never'}</td>
+                        <td><span class="status ${user.status}">${user.status.replace('status-', '')}</span></td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+            }
+
+            function updatePagination() {
+                const pagination = document.getElementById('pagination');
+                pagination.innerHTML = '';
+                const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
+                if (totalPages <= 0) return;
+
+                const prevButton = document.createElement('button');
+                prevButton.innerHTML = '&laquo; Prev';
+                prevButton.disabled = currentPage === 1;
+                prevButton.onclick = () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        displayUsers();
+                        updatePagination();
+                    }
+                };
+                pagination.appendChild(prevButton);
+
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage = Math.min(totalPages, startPage + 4);
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4);
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    if (i === currentPage) {
+                        pageButton.classList.add('active');
+                    }
+                    pageButton.onclick = () => {
+                        currentPage = i;
+                        displayUsers();
+                        updatePagination();
+                    };
+                    pagination.appendChild(pageButton);
+                }
+
+                const nextButton = document.createElement('button');
+                nextButton.innerHTML = 'Next &raquo;';
+                nextButton.disabled = currentPage === totalPages;
+                nextButton.onclick = () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        displayUsers();
+                        updatePagination();
+                    }
+                };
+                pagination.appendChild(nextButton);
+            }
+
+            function timeSince(dateString) {
+                if (!dateString) return 'Unknown';
+                const date = new Date(dateString);
+                const now = new Date();
+                const seconds = Math.floor((now - date) / 1000);
+                if (isNaN(seconds)) return 'Invalid date';
+
+                let interval = Math.floor(seconds / 31536000);
+                if (interval >= 1) return interval + ' year' + (interval === 1 ? '' : 's') + ' ago';
+
+                interval = Math.floor(seconds / 2592000);
+                if (interval >= 1) return interval + ' month' + (interval === 1 ? '' : 's') + ' ago';
+
+                interval = Math.floor(seconds / 86400);
+                if (interval >= 1) return interval + ' day' + (interval === 1 ? '' : 's') + ' ago';
+
+                interval = Math.floor(seconds / 3600);
+                if (interval >= 1) return interval + ' hour' + (interval === 1 ? '' : 's') + ' ago';
+
+                interval = Math.floor(seconds / 60);
+                if (interval >= 1) return interval + ' minute' + (interval === 1 ? '' : 's') + ' ago';
+
+                return Math.floor(seconds) + ' second' + (seconds === 1 ? '' : 's') + ' ago';
+            }
+
+            function generateStatus(device) {
+                if (!device) return 'status-inactive';
+                if (device.connectionStatus === "connected") return 'status-active';
+                if (device.deviceStatus !== undefined) return device.deviceStatus === 1 ? 'status-running' : 'status-inactive';
+
+                if (device.lastConnectionTime || device.updatedAt) {
+                    try {
+                        const lastActivity = new Date(device.lastConnectionTime || device.updatedAt);
+                        const now = new Date();
+                        const hoursDiff = (now - lastActivity) / (1000 * 60 * 60);
+                        if (hoursDiff < 24) return 'status-active';
+                        if (hoursDiff < 72) return 'status-running';
+                    } catch (e) {
+                        console.error("Error parsing date for status:", e);
+                    }
+                }
+                return 'status-inactive';
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                fetchUserData();
+                document.getElementById('refreshBtn').addEventListener('click', fetchUserData);
+                document.getElementById('searchBtn').addEventListener('click', () => {
+                    currentPage = 1;
+                    filterAndDisplayUsers();
+                });
+                document.getElementById('searchInput').addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') {
+                        currentPage = 1;
+                        filterAndDisplayUsers();
+                    }
+                });
+                document.getElementById('statusFilter').addEventListener('change', () => {
+                    currentPage = 1;
+                    filterAndDisplayUsers();
+                });
+                document.getElementById('platformFilter').addEventListener('change', () => {
+                    currentPage = 1;
+                    filterAndDisplayUsers();
+                });
+                document.getElementById('downloadBtn').addEventListener('click', async function(e) {
+        e.preventDefault();
+
+        try {
+            // Change button appearance to show loading state
+            const originalContent = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+            this.style.pointerEvents = 'none';
+
+            // Fetch the data
+            const response = await fetch('/download-data');
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to download data');
+            }
+
+            // Get the filename from the Content-Disposition header if available
+            let filename = 'aristavault_data.json';
+            const contentDisposition = response.headers.get('Content-Disposition');
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1];
+                }
+            }
+
+            // Convert response to blob
+            const blob = await response.blob();
+
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename;
+
+            // Append to body, click and remove
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            // Restore button appearance
+            this.innerHTML = originalContent;
+            this.style.pointerEvents = 'auto';
+
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Error downloading data: ' + error.message);
+
+            // Restore button appearance
+            this.innerHTML = originalContent || '<i class="fas fa-download"></i> Download Data';
+            this.style.pointerEvents = 'auto';
+        }
+    });
+                setInterval(fetchUserData, 5 * 60 * 1000);
+            });
+        </script>
+    </body>
+    </html>
