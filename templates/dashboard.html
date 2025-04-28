@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Arista Vault Performance Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -502,6 +502,8 @@
 .download-btn:hover {
     background-color: rgba(30, 58, 138, 0.1) !important;
 }
+
+
     </style>
 </head>
 <body>
@@ -648,10 +650,11 @@
             <div class="chart-container big-chart">
                 <h3>User Activity Trends</h3>
                 <div class="time-period-selector">
-                    <button class="time-btn active" data-period="monthly">Monthly</button>
-                    <button class="time-btn" data-period="weekly">Weekly</button>
-                    <button class="time-btn" data-period="daily">Daily</button>
-                </div>
+    <button class="time-btn" data-period="yearly">Yearly</button>
+    <button class="time-btn active" data-period="monthly">Monthly</button>
+    <button class="time-btn" data-period="weekly">Weekly</button>
+    <button class="time-btn" data-period="daily">Daily</button>
+</div>
                 <div id="userActivityChart" class="report-chart"></div>
             </div>
 
@@ -863,39 +866,40 @@ function processData(data) {
     updateUserTable(data);
 
     let stats = {
-        totalConnections: 0,
-        totalDisconnections: 0,
-        totalUsers: 0,
-        totalAlarms: 0,
+    totalConnections: 0,
+    totalDisconnections: 0,
+    totalUsers: 0,
+    totalAlarms: 0,
 
-        totalSavedFromTheft: 0,
-        iosUsers: 0,
-        androidUsers: 0,
-        iosActiveDevices: 0,
-        androidActiveDevices: 0,
-        iosAlarms: 0,
-        androidAlarms: 0,
-        iosConnTime: [],
-        androidConnTime: [],
-        appVersions: {
-            ios: {},
-            android: {}
-        },
-        deviceTypes: {},
-        monthlyActivity: {},
-        weeklyActivity: {},
-        dailyActivity: {},
-        alarmTypes: {
-            'Mobile Alarm': 0,
-            'Start Alarm': 0,
-            'Stop Alarm': 0,
-            'Mark as Lost': 0
-        },
-        connectionPatterns: {
-            connections: [],
-            disconnections: []
-        }
-    };
+    totalSavedFromTheft: 0,
+    iosUsers: 0,
+    androidUsers: 0,
+    iosActiveDevices: 0,
+    androidActiveDevices: 0,
+    iosAlarms: 0,
+    androidAlarms: 0,
+    iosConnTime: [],
+    androidConnTime: [],
+    appVersions: {
+        ios: {},
+        android: {}
+    },
+    deviceTypes: {},
+    monthlyActivity: {},
+    weeklyActivity: {},
+    dailyActivity: {},
+    yearlyActivity: {}, // Missing comma was here
+    alarmTypes: {
+        'Mobile Alarm': 0,
+        'Start Alarm': 0,
+        'Stop Alarm': 0,
+        'Mark as Lost': 0
+    },
+    connectionPatterns: {
+        connections: [],
+        disconnections: []
+    }
+};
 
     Object.values(data || {}).forEach(user => {
         Object.values(user.devices || {}).forEach(device => {
@@ -968,15 +972,17 @@ function processData(data) {
                         creationDate = new Date(device.createdAt);
                     }
 
-                    if (!isNaN(creationDate.getTime())) {
-                        const monthYear = creationDate.toLocaleString('default', { month: 'short', year: 'numeric' });
-                        const weekNumber = getWeekNumber(creationDate);
-                        const weekYear = `Week ${weekNumber}, ${creationDate.getFullYear()}`;
-                        const dayDate = creationDate.toISOString().split('T')[0];
+                if (!isNaN(creationDate.getTime())) {
+                    const year = creationDate.getFullYear().toString();
+                    const monthYear = creationDate.toLocaleString('default', { month: 'short', year: 'numeric' });
+                    const weekNumber = getWeekNumber(creationDate);
+                    const weekYear = `Week ${weekNumber}, ${creationDate.getFullYear()}`;
+                    const dayDate = creationDate.toISOString().split('T')[0];
 
-                        stats.monthlyActivity[monthYear] = (stats.monthlyActivity[monthYear] || 0) + 1;
-                        stats.weeklyActivity[weekYear] = (stats.weeklyActivity[weekYear] || 0) + 1;
-                        stats.dailyActivity[dayDate] = (stats.dailyActivity[dayDate] || 0) + 1;
+                    stats.yearlyActivity[year] = (stats.yearlyActivity[year] || 0) + 1; // Add this line
+                    stats.monthlyActivity[monthYear] = (stats.monthlyActivity[monthYear] || 0) + 1;
+                    stats.weeklyActivity[weekYear] = (stats.weeklyActivity[weekYear] || 0) + 1;
+                    stats.dailyActivity[dayDate] = (stats.dailyActivity[dayDate] || 0) + 1;
 
                         const today = new Date();
                         const diffDays = Math.floor((today - creationDate) / (1000 * 60 * 60 * 24)) || 1;
@@ -1308,7 +1314,17 @@ function createConnectionPatternsChart(stats) {
 function createUserActivityChart(stats) {
     let activityData;
 
-    if (activePeriod === 'monthly') {
+    if (activePeriod === 'yearly') {
+        activityData = stats.yearlyActivity;
+        const currentYear = new Date().getFullYear();
+        for (let i = 4; i >= 0; i--) {
+            const year = (currentYear - i).toString();
+            if (!activityData[year]) {
+                activityData[year] = 0;
+            }
+        }
+    } // Missing closing curly brace was here
+    else if (activePeriod === 'monthly') {
         activityData = stats.monthlyActivity;
 
         // Add months up to current month if they don't exist
@@ -1345,10 +1361,10 @@ function createUserActivityChart(stats) {
     } else {
         activityData = stats.dailyActivity;
 
-        // Add days up to current day if they don't exist
+
         const currentDate = new Date();
 
-        // Add up to 30 days of data
+
         for (let i = 29; i >= 0; i--) {
             const d = new Date();
             d.setDate(d.getDate() - i);
@@ -1361,7 +1377,10 @@ function createUserActivityChart(stats) {
     }
 
     const sortedKeys = Object.keys(activityData).sort((a, b) => {
-        if (activePeriod === 'daily') {
+        if (activePeriod === 'yearly') {
+            return parseInt(a) - parseInt(b);
+        }
+        else if (activePeriod === 'daily') {
             return new Date(a) - new Date(b);
         } else if (activePeriod === 'monthly') {
             // Parse month year format (e.g., "Jan 2025")
@@ -1517,11 +1536,8 @@ window.addEventListener('resize', function() {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Set href for Users menu item
     const usersMenuItem = document.querySelector('.menu-item:nth-child(3)');
     usersMenuItem.setAttribute('href', '/users');
-
-    // Set href for Analytics menu item
     const analyticsMenuItem = document.querySelector('.menu-item:nth-child(4)');
     analyticsMenuItem.setAttribute('href', '/analytics');
 
@@ -1540,28 +1556,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('refreshBtn').addEventListener('click', fetchData);
 
     document.querySelectorAll('.time-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
 
-            activePeriod = this.dataset.period;
-            if (previousData) {
-                const stats = calculatePreviousStats(previousData);
-                createUserActivityChart(stats);
-            }
-        });
-
+        activePeriod = this.dataset.period;
+        // Fix: Use the actual data instead of previousData
+        if (previousData) {
+            // Calculate full stats instead of just the previous stats
+            processData(previousData);
+        }
     });
+});
      document.getElementById('downloadBtn').addEventListener('click', async function(e) {
         e.preventDefault();
 
+
         try {
-            // Change button appearance to show loading state
             const originalContent = this.innerHTML;
             this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
             this.style.pointerEvents = 'none';
-
-            // Fetch the data
             const response = await fetch('/download-data');
 
             if (!response.ok) {
@@ -1579,30 +1593,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Convert response to blob
-            const blob = await response.blob();
 
-            // Create download link
+            const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
             a.download = filename;
-
-            // Append to body, click and remove
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
-
-            // Restore button appearance
             this.innerHTML = originalContent;
             this.style.pointerEvents = 'auto';
 
         } catch (error) {
             console.error('Download error:', error);
             alert('Error downloading data: ' + error.message);
-
-            // Restore button appearance
             this.innerHTML = originalContent || '<i class="fas fa-download"></i> Download Data';
             this.style.pointerEvents = 'auto';
         }
