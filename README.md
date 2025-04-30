@@ -1,4 +1,5 @@
 🔍 Arista Vault Real-Time Tracker Dashboard
+
 A real-time web dashboard built using Flask and Firebase Realtime Database, designed to visualize, analyze, and manage user and device data for the Arista Tracker App. This project was built solo to help Arista Vault’s internal teams monitor app health, engagement trends, and platform performance.
 
 🚀 Features
