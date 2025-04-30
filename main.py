@@ -15,7 +15,7 @@ def initialize_firebase(max_retries=3, retry_delay=5):
     while retries < max_retries:
         try:
             if not firebase_admin._apps:
-                cred = credentials.Certificate("Real.json")
+                cred = credentials.Certificate("arista.json")
                 firebase_admin.initialize_app(cred, {
                     'databaseURL': 'https://aristatracker-default-rtdb.firebaseio.com/'
                 })
