@@ -719,7 +719,7 @@
     </div>
 
 <script>
-    let previousData = null;
+let previousData = null;
 let chartRefs = {};
 let activePeriod = 'monthly';
 
@@ -795,7 +795,6 @@ function updateUserTable(data) {
     Object.entries(data).forEach(([userId, userData]) => {
         if (userData.devices) {
             Object.entries(userData.devices).forEach(([deviceId, deviceData]) => {
-                // Only add users with known platforms
                 const platform = deviceData.platform || deviceData.deviceType || '';
                 if (platform && platform.toLowerCase() !== 'unknown') {
                     users.push({
@@ -834,6 +833,7 @@ function updateUserTable(data) {
 
     document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
 }
+
 async function fetchData() {
     try {
         document.getElementById('refreshBtn').innerHTML = '<span class="loader"></span> Loading...';
@@ -866,45 +866,43 @@ function processData(data) {
     updateUserTable(data);
 
     let stats = {
-    totalConnections: 0,
-    totalDisconnections: 0,
-    totalUsers: 0,
-    totalAlarms: 0,
-
-    totalSavedFromTheft: 0,
-    iosUsers: 0,
-    androidUsers: 0,
-    iosActiveDevices: 0,
-    androidActiveDevices: 0,
-    iosAlarms: 0,
-    androidAlarms: 0,
-    iosConnTime: [],
-    androidConnTime: [],
-    appVersions: {
-        ios: {},
-        android: {}
-    },
-    deviceTypes: {},
-    monthlyActivity: {},
-    weeklyActivity: {},
-    dailyActivity: {},
-    yearlyActivity: {}, // Missing comma was here
-    alarmTypes: {
-        'Mobile Alarm': 0,
-        'Start Alarm': 0,
-        'Stop Alarm': 0,
-        'Mark as Lost': 0
-    },
-    connectionPatterns: {
-        connections: [],
-        disconnections: []
-    }
-};
+        totalConnections: 0,
+        totalDisconnections: 0,
+        totalUsers: 0,
+        totalAlarms: 0,
+        totalSavedFromTheft: 0,
+        iosUsers: 0,
+        androidUsers: 0,
+        iosActiveDevices: 0,
+        androidActiveDevices: 0,
+        iosAlarms: 0,
+        androidAlarms: 0,
+        iosConnTime: [],
+        androidConnTime: [],
+        appVersions: {
+            ios: {},
+            android: {}
+        },
+        deviceTypes: {},
+        monthlyActivity: {},
+        weeklyActivity: {},
+        dailyActivity: {},
+        yearlyActivity: {},
+        alarmTypes: {
+            'Mobile Alarm': 0,
+            'Start Alarm': 0,
+            'Stop Alarm': 0,
+            'Mark as Lost': 0
+        },
+        connectionPatterns: {
+            connections: [],
+            disconnections: []
+        }
+    };
 
     Object.values(data || {}).forEach(user => {
         Object.values(user.devices || {}).forEach(device => {
-        const platform = device.platform || device.deviceType || '';
-
+            const platform = device.platform || device.deviceType || '';
 
             if (!platform || platform.toLowerCase() === 'unknown') return;
             stats.totalConnections += device.connectedCount || 0;
@@ -914,7 +912,7 @@ function processData(data) {
 
             if (isIOS) {
                 stats.iosUsers++;
-                if (generateStatus(device) === 'status-active'|| generateStatus(device) === 'status-running') {
+                if (generateStatus(device) === 'status-active' || generateStatus(device) === 'status-running') {
                     stats.iosActiveDevices++;
                 }
                 stats.iosAlarms += (device.mobileAlarmCount || 0) +
@@ -927,7 +925,7 @@ function processData(data) {
                 }
             } else {
                 stats.androidUsers++;
-                if (generateStatus(device) === 'status-active'||generateStatus(device) === 'status-running') {
+                if (generateStatus(device) === 'status-active' || generateStatus(device) === 'status-running') {
                     stats.androidActiveDevices++;
                 }
                 stats.androidAlarms += (device.mobileAlarmCount || 0) +
@@ -966,23 +964,19 @@ function processData(data) {
             if (device.createdAt) {
                 let creationDate;
                 try {
-                    if (device.createdAt.includes(' ')) {
-                        creationDate = new Date(device.createdAt);
-                    } else {
-                        creationDate = new Date(device.createdAt);
-                    }
+                    creationDate = new Date(device.createdAt);
 
-                if (!isNaN(creationDate.getTime())) {
-                    const year = creationDate.getFullYear().toString();
-                    const monthYear = creationDate.toLocaleString('default', { month: 'short', year: 'numeric' });
-                    const weekNumber = getWeekNumber(creationDate);
-                    const weekYear = `Week ${weekNumber}, ${creationDate.getFullYear()}`;
-                    const dayDate = creationDate.toISOString().split('T')[0];
+                    if (!isNaN(creationDate.getTime())) {
+                        const year = creationDate.getFullYear().toString();
+                        const monthYear = creationDate.toLocaleString('default', { month: 'short', year: 'numeric' });
+                        const weekNumber = getWeekNumber(creationDate);
+                        const weekYear = `Week ${weekNumber}, ${creationDate.getFullYear()}`;
+                        const dayDate = creationDate.toISOString().split('T')[0];
 
-                    stats.yearlyActivity[year] = (stats.yearlyActivity[year] || 0) + 1; // Add this line
-                    stats.monthlyActivity[monthYear] = (stats.monthlyActivity[monthYear] || 0) + 1;
-                    stats.weeklyActivity[weekYear] = (stats.weeklyActivity[weekYear] || 0) + 1;
-                    stats.dailyActivity[dayDate] = (stats.dailyActivity[dayDate] || 0) + 1;
+                        stats.yearlyActivity[year] = (stats.yearlyActivity[year] || 0) + 1;
+                        stats.monthlyActivity[monthYear] = (stats.monthlyActivity[monthYear] || 0) + 1;
+                        stats.weeklyActivity[weekYear] = (stats.weeklyActivity[weekYear] || 0) + 1;
+                        stats.dailyActivity[dayDate] = (stats.dailyActivity[dayDate] || 0) + 1;
 
                         const today = new Date();
                         const diffDays = Math.floor((today - creationDate) / (1000 * 60 * 60 * 24)) || 1;
@@ -1063,7 +1057,6 @@ function updateDashboardElements(stats) {
         const prevStats = calculatePreviousStats(previousData);
         document.getElementById('usersPercent').textContent =
             calculatePercentChange(stats.totalUsers, prevStats.totalUsers);
-
     }
 
     createUserActivityChart(stats);
@@ -1168,7 +1161,6 @@ function createAlarmTypeChart(stats) {
 }
 
 function createAppVersionChart(stats) {
-    // Create iOS app version chart
     Plotly.newPlot('iosAppVersionChart', [{
         labels: Object.keys(stats.appVersions.ios),
         values: Object.values(stats.appVersions.ios),
@@ -1199,7 +1191,6 @@ function createAppVersionChart(stats) {
         autosize: true
     });
 
-    // Create Android app version chart
     Plotly.newPlot('androidAppVersionChart', [{
         labels: Object.keys(stats.appVersions.android),
         values: Object.values(stats.appVersions.android),
@@ -1230,10 +1221,10 @@ function createAppVersionChart(stats) {
         autosize: true
     });
 
-    // Update chart references
     chartRefs.iosAppVersion = document.getElementById('iosAppVersionChart');
     chartRefs.androidAppVersion = document.getElementById('androidAppVersionChart');
 }
+
 function createConnectionPatternsChart(stats) {
     const connectionsByDate = {};
     const disconnectionsByDate = {};
@@ -1323,15 +1314,11 @@ function createUserActivityChart(stats) {
                 activityData[year] = 0;
             }
         }
-    } // Missing closing curly brace was here
-    else if (activePeriod === 'monthly') {
+    } else if (activePeriod === 'monthly') {
         activityData = stats.monthlyActivity;
-
-        // Add months up to current month if they don't exist
         const currentDate = new Date();
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-        // Make sure we have all months from the past year up to current month
         for (let i = 11; i >= 0; i--) {
             const d = new Date();
             d.setMonth(currentDate.getMonth() - i);
@@ -1343,12 +1330,8 @@ function createUserActivityChart(stats) {
         }
     } else if (activePeriod === 'weekly') {
         activityData = stats.weeklyActivity;
-
-        // Add weeks up to current week if they don't exist
         const currentDate = new Date();
-        const currentWeek = getWeekNumber(currentDate);
 
-        // Add up to 12 weeks of data
         for (let i = 11; i >= 0; i--) {
             const d = new Date();
             d.setDate(d.getDate() - (i * 7));
@@ -1360,10 +1343,7 @@ function createUserActivityChart(stats) {
         }
     } else {
         activityData = stats.dailyActivity;
-
-
         const currentDate = new Date();
-
 
         for (let i = 29; i >= 0; i--) {
             const d = new Date();
@@ -1383,7 +1363,6 @@ function createUserActivityChart(stats) {
         else if (activePeriod === 'daily') {
             return new Date(a) - new Date(b);
         } else if (activePeriod === 'monthly') {
-            // Parse month year format (e.g., "Jan 2025")
             const [monthA, yearA] = a.split(' ');
             const [monthB, yearB] = b.split(' ');
 
@@ -1397,7 +1376,6 @@ function createUserActivityChart(stats) {
             }
             return monthIndex[monthA] - monthIndex[monthB];
         } else if (activePeriod === 'weekly') {
-            // Parse week year format (e.g., "Week 1, 2025")
             const weekA = parseInt(a.split(' ')[1]);
             const yearA = parseInt(a.split(', ')[1]);
             const weekB = parseInt(b.split(' ')[1]);
@@ -1561,9 +1539,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.classList.add('active');
 
         activePeriod = this.dataset.period;
-        // Fix: Use the actual data instead of previousData
         if (previousData) {
-            // Calculate full stats instead of just the previous stats
             processData(previousData);
         }
     });
@@ -1583,7 +1559,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errorData.error || 'Failed to download data');
             }
 
-            // Get the filename from the Content-Disposition header if available
             let filename = 'aristavault_data.json';
             const contentDisposition = response.headers.get('Content-Disposition');
             if (contentDisposition) {

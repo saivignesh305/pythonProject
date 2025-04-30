@@ -53,20 +53,20 @@ def analytics():
 @app.route('/download-data', methods=['GET'])
 def download_data():
     try:
-        # Get all data from Firebase
+
         trackers_ref = db.reference('trackers_detail')
         trackers_data = trackers_ref.get()
 
         users_ref = db.reference('users')
         users_data = users_ref.get()
 
-        # Combine the data
+
         combined_data = {
             'trackers_detail': trackers_data or {},
             'users': users_data or {}
         }
 
-        # Add timestamp to filename
+
         current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f"aristavault_data_{current_time}.json"
 
@@ -104,7 +104,7 @@ def fetch_data():
                     combined_data[user_id] = {
                         'userName': user_info.get('name', 'Unknown'),
                         'userEmail': user_info.get('email', ''),
-                        'userPhone': user_info.get('phone', ''),  # Add phone number extraction
+                        'userPhone': user_info.get('mobileNumber', ''),
                         'devices': {}
                     }
 
@@ -142,18 +142,16 @@ def enhance_tracker_data(data):
     enhanced_data = {}
 
     for user_id, user_data in data.items():
-        # Copy over user data
+
         enhanced_data[user_id] = user_data.copy() if isinstance(user_data, dict) else {}
 
-        # Ensure devices object exists
+
         if 'devices' not in enhanced_data[user_id]:
             enhanced_data[user_id]['devices'] = {}
 
-        # Ensure we have phone number field
         if 'userPhone' not in enhanced_data[user_id]:
             enhanced_data[user_id]['userPhone'] = 'N/A'
 
-            # Try to extract phone from email domain if it looks like a phone number
             if 'userEmail' in enhanced_data[user_id]:
                 email = enhanced_data[user_id]['userEmail']
                 domain = email.split('@')[-1] if '@' in email else ''
@@ -175,11 +173,11 @@ def enhance_tracker_data(data):
                     else:
                         enhanced_device['platform'] = 'Other'
 
-                # Handle missing createdAt
+
                 if 'createdAt' in enhanced_device and not enhanced_device.get('createdAt'):
                     enhanced_device['createdAt'] = datetime.now().isoformat()
 
-                # Handle missing lastConnectionTime
+
                 if 'lastConnectionTime' not in enhanced_device:
                     if 'updatedAt' in enhanced_device:
                         enhanced_device['lastConnectionTime'] = enhanced_device['updatedAt']
@@ -188,29 +186,27 @@ def enhance_tracker_data(data):
                     else:
                         enhanced_device['lastConnectionTime'] = datetime.now().isoformat()
 
-                # Handle average connection time calculation
+
                 if 'avgConnectionTime' not in enhanced_device:
                     connected_count = enhanced_device.get('connectedCount', 0)
 
                     if connected_count > 0 and 'totalUsageTime' in enhanced_device:
                         enhanced_device['avgConnectionTime'] = enhanced_device['totalUsageTime'] / connected_count
                     else:
-                        # Provide reasonable defaults
+
                         if connected_count > 20:
                             enhanced_device['avgConnectionTime'] = 15  # 15 minutes avg for power users
                         else:
                             enhanced_device['avgConnectionTime'] = 25  # 25 minutes for casual users
 
-                # Store enhanced device data
+
                 enhanced_data[user_id]['devices'][device_id] = enhanced_device
 
-        # Set up name field if not present
+
         if 'userName' in user_data:
             enhanced_data[user_id]['name'] = user_data['userName']
         elif 'userEmail' in user_data:
-            # Use email if name not available
             enhanced_data[user_id]['name'] = user_data['userEmail'].split('@')[0]
-
 
         if 'userEmail' in user_data:
             enhanced_data[user_id]['email'] = user_data['userEmail']

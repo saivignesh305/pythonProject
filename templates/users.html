@@ -593,12 +593,9 @@
         e.preventDefault();
 
         try {
-            // Change button appearance to show loading state
             const originalContent = this.innerHTML;
             this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
             this.style.pointerEvents = 'none';
-
-            // Fetch the data
             const response = await fetch('/download-data');
 
             if (!response.ok) {
@@ -606,7 +603,7 @@
                 throw new Error(errorData.error || 'Failed to download data');
             }
 
-            // Get the filename from the Content-Disposition header if available
+
             let filename = 'aristavault_data.json';
             const contentDisposition = response.headers.get('Content-Disposition');
             if (contentDisposition) {
@@ -616,30 +613,24 @@
                 }
             }
 
-            // Convert response to blob
+
             const blob = await response.blob();
 
-            // Create download link
+
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
             a.download = filename;
-
-            // Append to body, click and remove
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
-
-            // Restore button appearance
             this.innerHTML = originalContent;
             this.style.pointerEvents = 'auto';
 
         } catch (error) {
             console.error('Download error:', error);
             alert('Error downloading data: ' + error.message);
-
-            // Restore button appearance
             this.innerHTML = originalContent || '<i class="fas fa-download"></i> Download Data';
             this.style.pointerEvents = 'auto';
         }
